@@ -5,3 +5,4 @@ output "public-zone-id" {
 output "name-servers" {
   value = aws_route53_zone.zone.name_servers
 }
+
