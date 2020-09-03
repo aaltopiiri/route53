@@ -13,6 +13,7 @@ pipeline {
 		AWS_DEFAULT_REGION = "${params.AWS_REGION}"
 		PROFILE = "${params.PROFILE}"
 		ACTION = "${params.ACTION}"
+		DOMAIN_NAME = "${params.DOMAIN_NAME}"
 		PROJECT_DIR = "terraform"
   }
 	options {
@@ -28,6 +29,8 @@ pipeline {
 		string (name: 'ENV_NAME',
 			   defaultValue: 'tf-customer1',
 			   description: 'Env name')
+		string (name: 'DOMAIN_NAME',
+			   description: 'Domain name')	   
 		choice (name: 'ACTION',
 				choices: [ 'plan', 'apply', 'destroy'],
 				description: 'Run terraform plan / apply / destroy')
@@ -91,7 +94,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="aaltopiiri.info" -detailed-exitcode -out=tfplan')
+									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -detailed-exitcode -out=tfplan')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
@@ -167,7 +170,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('destroy', '-var region="us-west-2" -var domain_name="aaltopiiri.info" -auto-approve')
+									tfCmd('destroy', '-var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
