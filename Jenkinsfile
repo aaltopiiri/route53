@@ -91,7 +91,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('plan', '-var-file=/Users/gennadii.kravcenko/Projects/route53/variables.tfvars -detailed-exitcode -out=tfplan')
+									tfCmd('plan', '-var-file=variables.tfvars -detailed-exitcode -out=tfplan')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
@@ -167,7 +167,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('destroy', '-auto-approve')
+									tfCmd('destroy', 'tfplan -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
