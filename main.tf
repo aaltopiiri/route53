@@ -44,7 +44,7 @@ resource "aws_route53_record" "www-record" {
   name    = "www.${data.aws_route53_zone.zone.name}"
   type    = "A"
   ttl     = "300"
-  records = ["var.a_record"]
+  records = ["10.32.15.27"]
 }
 
 resource "aws_route53_record" "mail1-record" {
