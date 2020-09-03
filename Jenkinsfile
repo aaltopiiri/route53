@@ -46,8 +46,8 @@ pipeline {
 								accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 								secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 								credentialsId: 'amazon',
-								]]) */
-							//{
+								]]) 
+							{*/
 							try {
 								echo "Setting up Terraform"
 								def tfHome = tool name: 'terraform-0.13.1',
@@ -83,13 +83,13 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							withCredentials([
+							/* withCredentials([
 								[ $class: 'AmazonWebServicesCredentialsBinding',
 									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 									credentialsId: 'amazon',
 									]])
-								{
+								{ */
 								try {
 									tfCmd('plan', '-var-file=variables.tfvars -detailed-exitcode -out=tfplan')
 								} catch (ex) {
@@ -100,7 +100,7 @@ pipeline {
 									} else {
 										echo "Try running terraform again in debug mode"
 									}
-								}
+								//}
 							}
 						}
 					}
@@ -117,20 +117,20 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							withCredentials([
+							/* withCredentials([
 								[ $class: 'AmazonWebServicesCredentialsBinding',
 									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 									credentialsId: 'amazon',
 									]])
-								{
+								{ */
 								try {
 									tfCmd('apply', 'tfplan')
 								} catch (ex) {
                   currentBuild.result = "UNSTABLE"
 								}
 							}
-						}
+						//}
 					}
 				}
 			}
@@ -159,19 +159,19 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							withCredentials([
+							/* withCredentials([
 								[ $class: 'AmazonWebServicesCredentialsBinding',
 									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 									credentialsId: 'amazon',
 									]])
-								{
+								{ */
 								try {
 									tfCmd('destroy', '-var-file=variables.tfvars -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
-							}
+							//}
 						}
 					}
 				}
