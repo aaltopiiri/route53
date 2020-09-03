@@ -40,14 +40,14 @@ pipeline {
 		stage('Checkout & Environment Prep'){
 			steps {
 				script {
-					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) /* {
+					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {
 						withCredentials([
-							[ $class: 'AmazonWebServicesCredentialsBinding',
+							/* [ $class: 'AmazonWebServicesCredentialsBinding',
 								accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 								secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 								credentialsId: 'amazon',
-								]])
-							{ */
+								]]) */
+							{
 							try {
 								echo "Setting up Terraform"
 								def tfHome = tool name: 'terraform-0.13.1',
