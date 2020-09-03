@@ -167,7 +167,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('destroy', '-var-file=variables.tfvars -auto-approve')
+									tfCmd('destroy', '-auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
