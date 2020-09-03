@@ -167,7 +167,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('destroy', '-var region="us-west-2" -var domain_name="aaltopiiri.info" -lock=false -auto-approve')
+									tfCmd('destroy', '-var region="us-west-2" -var domain_name="aaltopiiri.info" -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
