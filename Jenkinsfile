@@ -7,14 +7,14 @@ agent any
     stage('TF Plan') {
       steps {
           sh 'terraform init'
-          sh '-var-file=variables.tfvars'
+          sh 'terraform plan -var-file=variables.tfvars'
       }      
     }
 
 
     stage('TF Apply') {
       steps {
-          sh 'apply -var-file=variables.tfvars --auto-approve'
+          sh 'terraform apply -var-file=variables.tfvars --auto-approve'
       }
     }
   } 
