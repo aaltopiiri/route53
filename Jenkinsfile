@@ -41,13 +41,13 @@ pipeline {
 			steps {
 				script {
 					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {
-						withCredentials([
-							/* [ $class: 'AmazonWebServicesCredentialsBinding',
+						/* withCredentials([
+							 [ $class: 'AmazonWebServicesCredentialsBinding',
 								accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 								secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
 								credentialsId: 'amazon',
 								]]) */
-							{
+							//{
 							try {
 								echo "Setting up Terraform"
 								def tfHome = tool name: 'terraform-0.13.1',
@@ -67,7 +67,7 @@ pipeline {
                                                                 echo 'Err: Incremental Build failed with Error: ' + ex.toString()
 								currentBuild.result = "UNSTABLE"
 							}
-						}
+						//}
 					}
 				}
 			}
