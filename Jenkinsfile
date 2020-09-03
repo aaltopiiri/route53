@@ -91,7 +91,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('plan', '-var profile="${params.PROFILE}" -var region="us-west-2" -var domain_name="aaltopiiri.info" -detailed-exitcode -out=tfplan')
+									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="aaltopiiri.info" -detailed-exitcode -out=tfplan')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
