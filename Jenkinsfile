@@ -13,7 +13,7 @@ pipeline {
 		AWS_DEFAULT_REGION = "${params.AWS_REGION}"
 		PROFILE = "${params.PROFILE}"
 		ACTION = "${params.ACTION}"
-		PROJECT_DIR = "terraform/main"
+		PROJECT_DIR = "terraform"
   }
 	options {
         buildDiscarder(logRotator(numToKeepStr: '30'))
@@ -91,7 +91,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('plan', '-var-file=./variables.tfvars')
+									tfCmd('plan', '-var-file=variables.tfvars')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
