@@ -125,7 +125,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('apply', '-var-file=/Users/gennadii.kravcenko/Projects/route53/variables.tfvars --auto-approve')
+									tfCmd('apply', '-var-file=/Users/gennadii.kravcenko/Projects/route53/variables.tfvars --auto-approve tfplan')
 								} catch (ex) {
                   currentBuild.result = "UNSTABLE"
 								}
