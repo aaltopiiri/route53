@@ -91,7 +91,7 @@ pipeline {
 									]])
 								{
 								try {
-									tfCmd('plan', '-var-file=variables.tfvars')
+									tfCmd('plan', '-var-file=./variables.tfvars')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
