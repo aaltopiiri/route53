@@ -1,11 +1,5 @@
 #variable "shared_credentials_file" {}
-variable "profile" {}
-variable "region" {}
-variable "domain_name" {}
-variable "a_record" {
-  type    = string
-  default = null
-}
+
 
 terraform {
   backend "s3" {

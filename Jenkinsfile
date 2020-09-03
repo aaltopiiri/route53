@@ -91,7 +91,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('plan', '-var-file=variables.tfvars -detailed-exitcode -out=tfplan')
+									tfCmd('plan', '-var profile="terraform" -var region="us-west-2" -var domain_name="aaltopiiri.info" -detailed-exitcode -out=tfplan')
 								} catch (ex) {
 									if (ex == 2 && "${ACTION}" == 'apply') {
 										currentBuild.result = "UNSTABLE"
@@ -167,7 +167,7 @@ pipeline {
 									]])
 								{ */
 								try {
-									tfCmd('destroy', '-var-file=variables.tfvars -auto-approve')
+									tfCmd('destroy', '-var region="us-west-2" -var domain_name="aaltopiiri.info" -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
