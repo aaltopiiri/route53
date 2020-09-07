@@ -43,7 +43,7 @@ pipeline {
 		stage('Checkout & Environment Prep'){
 			steps {
 				script {
-					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {
+					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {8
 						/* withCredentials([
 							 [ $class: 'AmazonWebServicesCredentialsBinding',
 								accessKeyVariable: 'AWS_ACCESS_KEY_ID',
@@ -58,9 +58,9 @@ pipeline {
 									env.PATH = "${tfHome}:${env.PATH}"
 									currentBuild.displayName += "[$AWS_REGION]::[$ACTION]"
 									sh("""
-										/usr/local/bin/aws configure --profile ${PROFILE} set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-										/usr/local/bin/aws configure --profile ${PROFILE} set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-										/usr/local/bin/aws configure --profile ${PROFILE} set region ${AWS_REGION}
+										#/usr/local/bin/aws configure --profile ${PROFILE} set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+										#/usr/local/bin/aws configure --profile ${PROFILE} set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+										#/usr/local/bin/aws configure --profile ${PROFILE} set region ${AWS_REGION}
 										export AWS_PROFILE=${PROFILE}
 										export TF_ENV_profile=${PROFILE}
 										mkdir -p /tmp/jenkins/.terraform.d/plugins/macos
