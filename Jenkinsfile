@@ -44,13 +44,6 @@ pipeline {
 			steps {
 				script {
 					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {8
-						/* withCredentials([
-							 [ $class: 'AmazonWebServicesCredentialsBinding',
-								accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-								secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-								credentialsId: 'amazon',
-								]]) 
-							{*/
 							try {
 								echo "Setting up Terraform"
 								def tfHome = tool name: 'terraform-0.13.1',
@@ -58,9 +51,6 @@ pipeline {
 									env.PATH = "${tfHome}:${env.PATH}"
 									currentBuild.displayName += "[$AWS_REGION]::[$ACTION]"
 									sh("""
-										#/usr/local/bin/aws configure --profile ${PROFILE} set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-										#/usr/local/bin/aws configure --profile ${PROFILE} set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-										#/usr/local/bin/aws configure --profile ${PROFILE} set region ${AWS_REGION}
 										export AWS_PROFILE=${PROFILE}
 										export TF_ENV_profile=${PROFILE}
 										mkdir -p /tmp/jenkins/.terraform.d/plugins/macos
@@ -70,7 +60,6 @@ pipeline {
                                                                 echo 'Err: Incremental Build failed with Error: ' + ex.toString()
 								currentBuild.result = "UNSTABLE"
 							}
-						//}
 					}
 				}
 			}
@@ -86,13 +75,7 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							/* withCredentials([
-								[ $class: 'AmazonWebServicesCredentialsBinding',
-									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-									credentialsId: 'amazon',
-									]])
-								{ */
+
 								try {
 									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -detailed-exitcode -out=tfplan')
 								} catch (ex) {
@@ -103,7 +86,7 @@ pipeline {
 									} else {
 										echo "Try running terraform again in debug mode"
 									}
-								//}
+
 							}
 						}
 					}
@@ -120,20 +103,13 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							/* withCredentials([
-								[ $class: 'AmazonWebServicesCredentialsBinding',
-									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-									credentialsId: 'amazon',
-									]])
-								{ */
+
 								try {
 									tfCmd('apply', '-lock=false tfplan')
 								} catch (ex) {
                   currentBuild.result = "UNSTABLE"
 								}
 							}
-						//}
 					}
 				}
 			}
@@ -162,19 +138,11 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
-							/* withCredentials([
-								[ $class: 'AmazonWebServicesCredentialsBinding',
-									accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-									secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-									credentialsId: 'amazon',
-									]])
-								{ */
 								try {
 									tfCmd('destroy', '-var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -auto-approve')
 								} catch (ex) {
 									currentBuild.result = "UNSTABLE"
 								}
-							//}
 						}
 					}
 				}

@@ -1,3 +1,3 @@
-variable "profile" {}
-variable "region" {}
-variable "domain_name" {}
+#variable "profile" {}
+#variable "region" {}
+#variable "domain_name" {}

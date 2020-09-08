@@ -1,20 +1,23 @@
-#variable "shared_credentials_file" {}
-
+variable "shared_credentials_file" {}
+variable "profile" {}
+variable "region" {}
+variable "domain_name" {}
 
 terraform {
   backend "s3" {
     bucket         = "aaltopiiri-terraform-bucket"
     key            = "terraform.tfstate"
     region         = "us-west-2"
+    profile        = "terraform"
     dynamodb_table = "aws-locks"
     encrypt        = true
   }
 }
 
 provider "aws" {
-  #  shared_credentials_file = var.shared_credentials_file
-  profile = var.profile
-  region  = var.region
+  shared_credentials_file = var.shared_credentials_file
+  profile                 = var.profile
+  region                  = var.region
 }
 
 resource "aws_route53_zone" "default" {
@@ -33,21 +36,50 @@ data "aws_route53_zone" "default" {
   #private_zone = false
 }
 
- 
-/* module "acm_request_certificate" {
-  source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=master"
+
+module "acm_request_certificate" {
+  source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=tags/0.7.0"
   domain_name                       = var.domain_name
   process_domain_validation_options = true
   ttl                               = "300"
-}  */
-
-resource "aws_route53_record" "www-record" {
-  zone_id = data.aws_route53_zone.default.zone_id
-  name    = "www.${data.aws_route53_zone.default.name}"
-  type    = "A"
-  ttl     = "300"
-  records = ["10.32.15.27"]
 }
+
+
+
+  resource "aws_route53_record" "A-record-ap-south-1" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "${var.domain_name}"
+  type    = "A"
+  //ttl     = "300"
+  set_identifier = "ap-south-1.${var.domain_name}"
+  //records = ["ap-south-1.${data.aws_route53_zone.default.name}."]
+  latency_routing_policy {
+    region = "ap-south-1"
+  }
+  alias {
+  name                   = "ap-south-1.${var.domain_name}."
+  zone_id                = 
+  evaluate_target_health = false
+  }
+}
+
+/*
+resource "aws_route53_record" "AAAA-record-ap-south-1" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "${data.aws_route53_zone.default.name}"
+  type    = "AAAA"
+  //ttl     = "300"
+  set_identifier = "ap-south-1.${data.aws_route53_zone.default.name}"
+  latency_routing_policy {
+  region = "ap-south-1"
+  }
+  alias {
+    name                   = "ap-south-1.${data.aws_route53_zone.default.name}."
+    zone_id                = data.aws_route53_zone.default.zone_id
+    evaluate_target_health = false
+  }
+}
+  */
 
 resource "aws_route53_record" "mail1-record" {
   zone_id = data.aws_route53_zone.default.zone_id
