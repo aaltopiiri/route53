@@ -1,8 +1,3 @@
-variable "shared_credentials_file" {}
-variable "profile" {}
-variable "region" {}
-variable "domain_name" {}
-
 terraform {
   backend "s3" {
     bucket         = "aaltopiiri-terraform-bucket"
@@ -20,70 +15,100 @@ provider "aws" {
   region                  = var.region
 }
 
-resource "aws_route53_zone" "default" {
+
+
+/*
+resource "aws_route53_zone" "zone" {
   name     = var.domain_name
   provider = aws
-  #force_destroy = true
+  //force_destroy = true
 }
 
-resource "aws_route53_delegation_set" "default" {
-  reference_name = "TerraformDNS"
+
+resource "aws_route53_delegation_set" "zone-delegation" {
+  reference_name = "DNSTerraform"
 }
+
 
 
 data "aws_route53_zone" "default" {
-  zone_id = aws_route53_zone.default.zone_id
-  #private_zone = false
+  //zone_id = aws_route53_zone.default.zone_id
+  name = aws_route53_zone.default.name
+  //private_zone = false
 }
 
+
+*/
+
+resource "aws_route53_delegation_set" "main" {
+  reference_name = "TerraformDNS"
+}
+
+resource "aws_route53_zone" "primary" {
+  name              = var.domain_name
+  delegation_set_id = aws_route53_delegation_set.main.id
+}
 
 module "acm_request_certificate" {
   source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=tags/0.7.0"
-  domain_name                       = var.domain_name
+  domain_name                       = "${var.domain_name}"
   process_domain_validation_options = true
   ttl                               = "300"
+  subject_alternative_names         = ["*.${var.domain_name}"]
 }
 
-
-
-  resource "aws_route53_record" "A-record-ap-south-1" {
-  zone_id = data.aws_route53_zone.default.zone_id
+ 
+  resource "aws_route53_record" "A-record-us-east-1" {
+  zone_id = aws_route53_zone.primary.zone_id
   name    = "${var.domain_name}"
   type    = "A"
-  //ttl     = "300"
-  set_identifier = "ap-south-1.${var.domain_name}"
-  //records = ["ap-south-1.${data.aws_route53_zone.default.name}."]
+  set_identifier = "${var.domain_name}"
   latency_routing_policy {
-    region = "ap-south-1"
+    region = "us-east-1"
   }
   alias {
-  name                   = "ap-south-1.${var.domain_name}."
-  zone_id                = 
+  name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+  zone_id                = "Z35SXDOTRQ7X7K"
+  evaluate_target_health = false
+  }
+}
+
+  resource "aws_route53_record" "AAAA-record-us-east-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "${var.domain_name}"
+  type    = "AAAA"
+  set_identifier = "${var.domain_name}"
+  latency_routing_policy {
+    region = "us-east-1"
+  }
+  alias {
+  name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+  zone_id                = "Z35SXDOTRQ7X7K"
   evaluate_target_health = false
   }
 }
 
 /*
 resource "aws_route53_record" "AAAA-record-ap-south-1" {
-  zone_id = data.aws_route53_zone.default.zone_id
-  name    = "${data.aws_route53_zone.default.name}"
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = "${data.aws_route53_zone.selected.name}"
   type    = "AAAA"
   //ttl     = "300"
-  set_identifier = "ap-south-1.${data.aws_route53_zone.default.name}"
+  set_identifier = "ap-south-1.${data.aws_route53_zone.selected.name}"
   latency_routing_policy {
   region = "ap-south-1"
   }
   alias {
-    name                   = "ap-south-1.${data.aws_route53_zone.default.name}."
-    zone_id                = data.aws_route53_zone.default.zone_id
+    name                   = "ap-south-1.${data.aws_route53_zone.selected.name}."
+    zone_id                = data.aws_route53_zone.selected.zone_id
     evaluate_target_health = false
   }
 }
-  */
 
-resource "aws_route53_record" "mail1-record" {
-  zone_id = data.aws_route53_zone.default.zone_id
-  name    = "${data.aws_route53_zone.default.name}"
+ 
+resource "aws_route53_record" "mx-record" {
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = "${data.aws_route53_zone.selected.name}"
   type    = "MX"
   ttl     = "300"
   records = [
@@ -94,3 +119,4 @@ resource "aws_route53_record" "mail1-record" {
     "10 aspmx3.googlemail.com."
   ]
 }
+*/
