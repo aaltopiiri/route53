@@ -16,9 +16,6 @@ provider "aws" {
 }
 
 
-
-
-
 resource "aws_route53_delegation_set" "main" {
   reference_name = "TerraformDNS"
 }
@@ -79,7 +76,7 @@ resource "aws_route53_record" "a-failover-primary-eu-west-1" {
   set_identifier = "eu-west-1-Primary"
   alias {
     name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
-    zone_id                = "Z32O12XQLNTSW2"
+    zone_id                = "${var.elb_eu_zone_id}"
     evaluate_target_health = true
   }
 
@@ -114,7 +111,7 @@ resource "aws_route53_record" "aaaa-failover-primary-eu-west-1" {
   set_identifier = "eu-west-1-Primary"
   alias {
     name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
-    zone_id                = "Z32O12XQLNTSW2"
+    zone_id                = "${var.elb_eu_zone_id}"
     evaluate_target_health = true
   }
 
@@ -166,6 +163,77 @@ resource "aws_route53_record" "aaaa-latency-eu-west-1" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "a-failover-primary-ap-south-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "ap-south-1.${var.domain_name}"
+  type    = "A"
+
+  failover_routing_policy {
+    type = "PRIMARY"
+  }
+
+  set_identifier = "ap-south-1-Primary"
+  alias {
+    name                   = "cdp-tds-ap-south-alb-4d-1293711515.ap-south-1.elb.amazonaws.com."
+    zone_id                = "${var.elb_ap_zone_id}"
+    evaluate_target_health = true
+  }
+
+}
+
+resource "aws_route53_record" "a-failover-secondary-ap-south-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "ap-south-1.${var.domain_name}"
+  type    = "A"
+
+  failover_routing_policy {
+    type = "SECONDARY"
+  }
+
+  set_identifier = "ap-south-1-Secondary"
+  alias {
+    name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+    zone_id                = "${var.elb_us_zone_id}"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "aaaa-failover-primary-ap-south-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "ap-south-1.${var.domain_name}"
+  type    = "AAAA"
+
+  failover_routing_policy {
+    type = "PRIMARY"
+  }
+
+  set_identifier = "ap-south-1-Primary"
+  alias {
+    name                   = "cdp-tds-ap-south-alb-4d-1293711515.ap-south-1.elb.amazonaws.com."
+    zone_id                = "${var.elb_ap_zone_id}"
+    evaluate_target_health = true
+  }
+
+}
+
+resource "aws_route53_record" "aaaa-failover-secondary-ap-south-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "ap-south-1.${var.domain_name}"
+  type    = "AAAA"
+
+  failover_routing_policy {
+    type = "SECONDARY"
+  }
+
+  set_identifier = "ap-south-1-Secondary"
+  alias {
+    name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+    zone_id                = "${var.elb_us_zone_id}"
+    evaluate_target_health = true
+  }
+}
+
 
 /*
 resource "aws_route53_record" "AAAA-record-ap-south-1" {
