@@ -33,6 +33,8 @@ module "acm_request_certificate" {
   subject_alternative_names         = ["*.${var.domain_name}"]
 }
 
+//Region us-east-1 (North Virginia)  
+//Latency Policy
 
 resource "aws_route53_record" "a-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
@@ -63,6 +65,9 @@ resource "aws_route53_record" "aaaa-latency-us-east-1" {
     evaluate_target_health = false
   }
 }
+
+//Region eu-west-1 (Dublin) 
+//Failover Policy
 
 resource "aws_route53_record" "a-failover-primary-eu-west-1" {
   zone_id = aws_route53_zone.primary.zone_id
@@ -134,6 +139,8 @@ resource "aws_route53_record" "aaaa-failover-secondary-eu-west-1" {
   }
 }
 
+//Latency Policy eu-west-1
+
 resource "aws_route53_record" "a-latency-eu-west-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
@@ -163,6 +170,8 @@ resource "aws_route53_record" "aaaa-latency-eu-west-1" {
     evaluate_target_health = false
   }
 }
+
+//Region ap-south-1 (Mumbai) 
 
 resource "aws_route53_record" "a-failover-primary-ap-south-1" {
   zone_id = aws_route53_zone.primary.zone_id
@@ -234,6 +243,37 @@ resource "aws_route53_record" "aaaa-failover-secondary-ap-south-1" {
   }
 }
 
+//Latency Policy ap-south-1
+
+resource "aws_route53_record" "a-latency-ap-south-1" {
+  zone_id        = aws_route53_zone.primary.zone_id
+  name           = "${var.domain_name}"
+  type           = "A"
+  set_identifier = "cdp-tds-ap-south-1"
+  latency_routing_policy {
+    region = "eu-west-1"
+  }
+  alias {
+    name                   = "ap-south-1.${var.domain_name}."
+    zone_id                = aws_route53_zone.primary.zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "aaaa-latency-ap-south-1" {
+  zone_id        = aws_route53_zone.primary.zone_id
+  name           = "${var.domain_name}"
+  type           = "AAAA"
+  set_identifier = "cdp-tds-ap-south-1"
+  latency_routing_policy {
+    region = "ap-south-1"
+  }
+  alias {
+    name                   = "ap-south-1.${var.domain_name}."
+    zone_id                = aws_route53_zone.primary.zone_id
+    evaluate_target_health = false
+  }
+}
 
 /*
 resource "aws_route53_record" "AAAA-record-ap-south-1" {
