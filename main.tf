@@ -9,6 +9,45 @@ terraform {
   }
 }
 
+resource "aws_route53_health_check" "health_check_us" {
+  fqdn              = "example.com"
+  port              = 80
+  type              = "HTTP"
+  resource_path     = "/"
+  failure_threshold = "5"
+  request_interval  = "30"
+
+  tags = {
+    Name = "tf-test-health-check"
+  }
+}
+
+resource "aws_route53_health_check" "health_check_us" {
+  fqdn              = "example.com"
+  port              = 80
+  type              = "HTTP"
+  resource_path     = "/"
+  failure_threshold = "5"
+  request_interval  = "30"
+
+  tags = {
+    Name = "tf-test-health-check"
+  }
+}
+
+resource "aws_route53_health_check" "health_check_eu" {
+  fqdn              = "example.com"
+  port              = 80
+  type              = "HTTP"
+  resource_path     = "/"
+  failure_threshold = "5"
+  request_interval  = "30"
+
+  tags = {
+    Name = "tf-test-health-check"
+  }
+}
+
 provider "aws" {
   shared_credentials_file = var.shared_credentials_file
   profile                 = var.profile
@@ -25,6 +64,7 @@ resource "aws_route53_zone" "primary" {
   delegation_set_id = aws_route53_delegation_set.main.id
 }
 
+/*
 module "acm_request_certificate" {
   source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=tags/0.7.0"
   domain_name                       = "${var.domain_name}"
@@ -32,6 +72,7 @@ module "acm_request_certificate" {
   ttl                               = "300"
   subject_alternative_names         = ["*.${var.domain_name}"]
 }
+*/
 
 //Region us-east-1 (North Virginia)  
 //Latency Policy
