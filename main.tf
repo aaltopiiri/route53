@@ -17,28 +17,7 @@ provider "aws" {
 
 
 
-/*
-resource "aws_route53_zone" "zone" {
-  name     = var.domain_name
-  provider = aws
-  //force_destroy = true
-}
 
-
-resource "aws_route53_delegation_set" "zone-delegation" {
-  reference_name = "DNSTerraform"
-}
-
-
-
-data "aws_route53_zone" "default" {
-  //zone_id = aws_route53_zone.default.zone_id
-  name = aws_route53_zone.default.name
-  //private_zone = false
-}
-
-
-*/
 
 resource "aws_route53_delegation_set" "main" {
   reference_name = "TerraformDNS"
@@ -75,9 +54,9 @@ module "acm_request_certificate" {
 
   resource "aws_route53_record" "aaaa-latency-us-east-1" {
   zone_id = aws_route53_zone.primary.zone_id
-  name    = "cdp-tds-us-east-1"
+  name    = "${var.domain_name}"
   type    = "AAAA"
-  set_identifier = "${var.domain_name}"
+  set_identifier = "cdp-tds-us-east-1"
   latency_routing_policy {
     region = "us-east-1"
   }
@@ -158,6 +137,36 @@ resource "aws_route53_record" "aaaa-failover-secondary-eu-west-1" {
   }
 }
 
+  resource "aws_route53_record" "a-latency-eu-west-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "${var.domain_name}"
+  type    = "A"
+  set_identifier = "cdp-tds-eu-west-1"
+  latency_routing_policy {
+    region = "eu-west-1"
+  }
+  alias {
+  name                   = "eu-west-1.${var.domain_name}."
+  zone_id                = aws_route53_zone.primary.zone_id
+  evaluate_target_health = false
+  }
+}
+
+  resource "aws_route53_record" "aaaa-latency-eu-west-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "${var.domain_name}"
+  type    = "AAAA"
+  set_identifier = "cdp-tds-eu-west-1"
+  latency_routing_policy {
+    region = "eu-west-1"
+  }
+  alias {
+  name                   = "eu-west-1.${var.domain_name}."
+  zone_id                = aws_route53_zone.primary.zone_id
+  evaluate_target_health = false
+  }
+}
+
 /*
 resource "aws_route53_record" "AAAA-record-ap-south-1" {
   zone_id = data.aws_route53_zone.selected.zone_id
@@ -189,4 +198,27 @@ resource "aws_route53_record" "mx-record" {
     "10 aspmx3.googlemail.com."
   ]
 }
+
+
+
+resource "aws_route53_zone" "zone" {
+  name     = var.domain_name
+  provider = aws
+  //force_destroy = true
+}
+
+
+resource "aws_route53_delegation_set" "zone-delegation" {
+  reference_name = "DNSTerraform"
+}
+
+
+
+data "aws_route53_zone" "default" {
+  //zone_id = aws_route53_zone.default.zone_id
+  name = aws_route53_zone.default.name
+  //private_zone = false
+}
+
+
 */
