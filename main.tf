@@ -58,10 +58,25 @@ module "acm_request_certificate" {
 }
 
  
-  resource "aws_route53_record" "A-record-us-east-1" {
+  resource "aws_route53_record" "a-latency-us-east-1" {
   zone_id = aws_route53_zone.primary.zone_id
   name    = "${var.domain_name}"
   type    = "A"
+  set_identifier = "cdp-tds-us-east-1"
+  latency_routing_policy {
+    region = "us-east-1"
+  }
+  alias {
+  name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+  zone_id                = "Z35SXDOTRQ7X7K"
+  evaluate_target_health = false
+  }
+}
+
+  resource "aws_route53_record" "aaaa-latency-us-east-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "cdp-tds-us-east-1"
+  type    = "AAAA"
   set_identifier = "${var.domain_name}"
   latency_routing_policy {
     region = "us-east-1"
@@ -73,18 +88,73 @@ module "acm_request_certificate" {
   }
 }
 
-  resource "aws_route53_record" "AAAA-record-us-east-1" {
+resource "aws_route53_record" "a-failover-primary-eu-west-1" {
   zone_id = aws_route53_zone.primary.zone_id
-  name    = "${var.domain_name}"
-  type    = "AAAA"
-  set_identifier = "${var.domain_name}"
-  latency_routing_policy {
-    region = "us-east-1"
+  name    = "eu-west-1.${var.domain_name}"
+  type    = "A"
+
+  failover_routing_policy {
+    type = "PRIMARY"
   }
+
+  set_identifier = "eu-west-1-Primary"
   alias {
-  name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
-  zone_id                = "Z35SXDOTRQ7X7K"
-  evaluate_target_health = false
+    name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
+    zone_id                = "Z32O12XQLNTSW2"
+    evaluate_target_health = true
+  }
+
+}
+
+resource "aws_route53_record" "a-failover-secondary-eu-west-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "eu-west-1.${var.domain_name}"
+  type    = "A"
+ 
+  failover_routing_policy {
+    type = "SECONDARY"
+  }
+
+  set_identifier = "eu-west-1-Secondary"
+  alias {
+    name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+    zone_id                = "Z35SXDOTRQ7X7K"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "aaaa-failover-primary-eu-west-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "eu-west-1.${var.domain_name}"
+  type    = "AAAA"
+
+  failover_routing_policy {
+    type = "PRIMARY"
+  }
+
+  set_identifier = "eu-west-1-Primary"
+  alias {
+    name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
+    zone_id                = "Z32O12XQLNTSW2"
+    evaluate_target_health = true
+  }
+
+}
+
+resource "aws_route53_record" "aaaa-failover-secondary-eu-west-1" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "eu-west-1.${var.domain_name}"
+  type    = "AAAA"
+ 
+  failover_routing_policy {
+    type = "SECONDARY"
+  }
+
+  set_identifier = "eu-west-1-Secondary"
+  alias {
+    name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
+    zone_id                = "Z35SXDOTRQ7X7K"
+    evaluate_target_health = true
   }
 }
 

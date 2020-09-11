@@ -18,3 +18,7 @@ yum -y install httpd
 echo "<html><body bgcolor=black><center><h1><font color=red>WebServer-3</h1></center></body></html>" > /var/www/html/index.html
 sudo systemctl start httpd
 sudo systemctl enable httpd
+
+terraform plan -var-file=variables.tfvars -out "tfout
+terraform apply "tfout"
+terraform destroy -var-file=variables.tfvars -lock=false -auto-approve
