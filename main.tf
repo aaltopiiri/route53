@@ -40,7 +40,7 @@ resource "aws_route53_record" "a-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "A"
-  set_identifier = "cdp-tds-us-east-1"
+  set_identifier = "cdp-tds-us-east-1-a"
   latency_routing_policy {
     region = "us-east-1"
   }
@@ -55,7 +55,7 @@ resource "aws_route53_record" "aaaa-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "AAAA"
-  set_identifier = "cdp-tds-us-east-1"
+  set_identifier = "cdp-tds-us-east-1-aaaa"
   latency_routing_policy {
     region = "us-east-1"
   }
@@ -78,7 +78,7 @@ resource "aws_route53_record" "a-failover-primary-eu-west-1" {
     type = "PRIMARY"
   }
 
-  set_identifier = "eu-west-1-Primary"
+  set_identifier = "eu-west-1-primary-a"
   alias {
     name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
     zone_id                = "${var.elb_eu_zone_id}"
@@ -96,7 +96,7 @@ resource "aws_route53_record" "a-failover-secondary-eu-west-1" {
     type = "SECONDARY"
   }
 
-  set_identifier = "eu-west-1-Secondary"
+  set_identifier = "eu-west-1-secondary-a"
   alias {
     name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
     zone_id                = "${var.elb_us_zone_id}"
@@ -113,7 +113,7 @@ resource "aws_route53_record" "aaaa-failover-primary-eu-west-1" {
     type = "PRIMARY"
   }
 
-  set_identifier = "eu-west-1-Primary"
+  set_identifier = "eu-west-1-primary-aaaa"
   alias {
     name                   = "cdp-tds-eu-west-alb-4d-429299911.eu-west-1.elb.amazonaws.com."
     zone_id                = "${var.elb_eu_zone_id}"
@@ -131,7 +131,7 @@ resource "aws_route53_record" "aaaa-failover-secondary-eu-west-1" {
     type = "SECONDARY"
   }
 
-  set_identifier = "eu-west-1-Secondary"
+  set_identifier = "eu-west-1-secondary-aaaa"
   alias {
     name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
     zone_id                = "${var.elb_us_zone_id}"
@@ -145,7 +145,7 @@ resource "aws_route53_record" "a-latency-eu-west-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "A"
-  set_identifier = "cdp-tds-eu-west-1"
+  set_identifier = "cdp-tds-eu-west-1-a"
   latency_routing_policy {
     region = "eu-west-1"
   }
@@ -160,7 +160,7 @@ resource "aws_route53_record" "aaaa-latency-eu-west-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "AAAA"
-  set_identifier = "cdp-tds-eu-west-1"
+  set_identifier = "cdp-tds-eu-west-1-aaaa"
   latency_routing_policy {
     region = "eu-west-1"
   }
@@ -182,7 +182,7 @@ resource "aws_route53_record" "a-failover-primary-ap-south-1" {
     type = "PRIMARY"
   }
 
-  set_identifier = "ap-south-1-Primary"
+  set_identifier = "ap-south-1-primary-a"
   alias {
     name                   = "cdp-tds-ap-south-alb-4d-1293711515.ap-south-1.elb.amazonaws.com."
     zone_id                = "${var.elb_ap_zone_id}"
@@ -200,7 +200,7 @@ resource "aws_route53_record" "a-failover-secondary-ap-south-1" {
     type = "SECONDARY"
   }
 
-  set_identifier = "ap-south-1-Secondary"
+  set_identifier = "ap-south-1-secondary-a"
   alias {
     name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
     zone_id                = "${var.elb_us_zone_id}"
@@ -217,7 +217,7 @@ resource "aws_route53_record" "aaaa-failover-primary-ap-south-1" {
     type = "PRIMARY"
   }
 
-  set_identifier = "ap-south-1-Primary"
+  set_identifier = "ap-south-1-primary-aaaa"
   alias {
     name                   = "cdp-tds-ap-south-alb-4d-1293711515.ap-south-1.elb.amazonaws.com."
     zone_id                = "${var.elb_ap_zone_id}"
@@ -235,7 +235,7 @@ resource "aws_route53_record" "aaaa-failover-secondary-ap-south-1" {
     type = "SECONDARY"
   }
 
-  set_identifier = "ap-south-1-Secondary"
+  set_identifier = "ap-south-1-secondary-aaaa"
   alias {
     name                   = "cdp-tds-alb-4d-930437359.us-east-1.elb.amazonaws.com."
     zone_id                = "${var.elb_us_zone_id}"
@@ -249,9 +249,9 @@ resource "aws_route53_record" "a-latency-ap-south-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "A"
-  set_identifier = "cdp-tds-ap-south-1"
+  set_identifier = "cdp-tds-ap-south-1-a"
   latency_routing_policy {
-    region = "eu-west-1"
+    region = "ap-south-1"
   }
   alias {
     name                   = "ap-south-1.${var.domain_name}."
@@ -264,7 +264,7 @@ resource "aws_route53_record" "aaaa-latency-ap-south-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
   type           = "AAAA"
-  set_identifier = "cdp-tds-ap-south-1"
+  set_identifier = "cdp-tds-ap-south-1-aaaa"
   latency_routing_policy {
     region = "ap-south-1"
   }
