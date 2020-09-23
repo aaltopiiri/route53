@@ -18,20 +18,7 @@ resource "aws_route53_health_check" "health_check_us" {
   request_interval  = "30"
 
   tags = {
-    Name = "tf-test-health-check"
-  }
-}
-
-resource "aws_route53_health_check" "health_check_us" {
-  fqdn              = "example.com"
-  port              = 80
-  type              = "HTTP"
-  resource_path     = "/"
-  failure_threshold = "5"
-  request_interval  = "30"
-
-  tags = {
-    Name = "tf-test-health-check"
+    Name = "tf-us-health-check"
   }
 }
 
@@ -44,7 +31,20 @@ resource "aws_route53_health_check" "health_check_eu" {
   request_interval  = "30"
 
   tags = {
-    Name = "tf-test-health-check"
+    Name = "tf-eu-health-check"
+  }
+}
+
+resource "aws_route53_health_check" "health_check_ap" {
+  fqdn              = "example.com"
+  port              = 80
+  type              = "HTTP"
+  resource_path     = "/"
+  failure_threshold = "5"
+  request_interval  = "30"
+
+  tags = {
+    Name = "tf-ap-health-check"
   }
 }
 
@@ -91,6 +91,8 @@ resource "aws_route53_record" "a-latency-us-east-1" {
     evaluate_target_health = false
   }
 }
+
+
 
 resource "aws_route53_record" "aaaa-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
