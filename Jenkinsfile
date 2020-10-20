@@ -1,18 +1,18 @@
 def tfCmd(String command, 
 String options = '',
-List category_list = ["\"Select:selected\"","\"Vegetables\"","\"Fruits\""]
-List fruits_list = ["\"Select:selected\"","\"apple\"","\"banana\"","\"mango\""]
-List vegetables_list = ["\"Select:selected\"","\"potato\"","\"tomato\"","\"broccoli\""]
-List default_item = ["\"Not Applicable\""]
-String categories = buildScript(category_list)
-String vegetables = buildScript(vegetables_list)
-String fruits = buildScript(fruits_list)
-String items = populateItems(default_item,vegetables_list,fruits_list)
+List category_list = ["\"Select:selected\"","\"Vegetables\"","\"Fruits\""],
+List fruits_list = ["\"Select:selected\"","\"apple\"","\"banana\"","\"mango\""],
+List vegetables_list = ["\"Select:selected\"","\"potato\"","\"tomato\"","\"broccoli\""],
+List default_item = ["\"Not Applicable\""],
+String categories = buildScript(category_list),
+String vegetables = buildScript(vegetables_list),
+String fruits = buildScript(fruits_list),
+String items = populateItems(default_item,vegetables_list,fruits_list),
 String buildScript(List values){
   return "return $values"
-}
-String populateItems(List default_item, List vegetablesList, List fruitsList)
-{return """if(Categories.equals('Vegetables')){
+},
+String populateItems(List default_item, List vegetablesList, List fruitsList){
+	return """if(Categories.equals('Vegetables')){
      return $vegetablesList
      }
      else if(Categories.equals('Fruits')){
