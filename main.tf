@@ -55,13 +55,8 @@ provider "aws" {
 }
 
 
-<<<<<<< HEAD
-resource "aws_route53_delegation_set" "default" {
-  reference_name = "Terraform DNS"
-=======
 resource "aws_route53_delegation_set" "main" {
   reference_name = "TerraformDNS"
->>>>>>> b326183404ca4545b3f93ff6edcc354af0bc9b80
 }
 
 resource "aws_route53_zone" "primary" {
@@ -69,15 +64,6 @@ resource "aws_route53_zone" "primary" {
   delegation_set_id = aws_route53_delegation_set.main.id
 }
 
-<<<<<<< HEAD
-  resource "aws_route53_record" "A-record" {
-  zone_id = data.aws_route53_zone.default.zone_id
-  name    = var.domain_name
-  type    = "A"
-  ttl     = "300"
-  records = ["10.10.10.10"]
-
-=======
 /*
 module "acm_request_certificate" {
   source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=tags/0.7.0"
@@ -104,7 +90,6 @@ resource "aws_route53_record" "a-latency-us-east-1" {
     zone_id                = "${var.elb_us_zone_id}"
     evaluate_target_health = false
   }
->>>>>>> b326183404ca4545b3f93ff6edcc354af0bc9b80
 }
 
 
@@ -116,11 +101,6 @@ resource "aws_route53_record" "a-latency-us-east-1" {
   subject_alternative_names         = ["*.${data.aws_route53_zone.default.name}"]
 }  
 
-<<<<<<< HEAD
-
-
- 
-=======
 resource "aws_route53_record" "aaaa-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
   name           = "${var.domain_name}"
@@ -400,4 +380,3 @@ data "aws_route53_zone" "default" {
 
 
 */
->>>>>>> b326183404ca4545b3f93ff6edcc354af0bc9b80
