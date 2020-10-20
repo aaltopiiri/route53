@@ -1,28 +1,5 @@
 def tfCmd(String command, 
-String options = '',
-List category_list = ["\"Select:selected\"","\"Vegetables\"","\"Fruits\""],
-List fruits_list = ["\"Select:selected\"","\"apple\"","\"banana\"","\"mango\""],
-List vegetables_list = ["\"Select:selected\"","\"potato\"","\"tomato\"","\"broccoli\""],
-List default_item = ["\"Not Applicable\""],
-String categories = buildScript(category_list),
-String vegetables = buildScript(vegetables_list),
-String fruits = buildScript(fruits_list),
-String items = populateItems(default_item,vegetables_list,fruits_list)
-
-/* String buildScript(List values){
-  return "return $values"
-},
-String populateItems(List default_item, List vegetablesList, List fruitsList){
-	return """if(Categories.equals('Vegetables')){
-     return $vegetablesList
-     }
-     else if(Categories.equals('Fruits')){
-     return $fruitsList
-     }else{
-     return $default_item
-     }
-     """
-} */
+String options = ''
 )
 {
 	ACCESS = "export AWS_PROFILE=${PROFILE} && export TF_ENV_profile=${PROFILE}"
@@ -34,11 +11,6 @@ String populateItems(List default_item, List vegetablesList, List fruitsList){
 
 
 
-/* properties([
-    parameters([
-         ])
-])
- */
 pipeline {
   agent any
 
@@ -70,17 +42,15 @@ pipeline {
 		string (name: 'PROFILE',
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
-		choice ($class: 'ChoiceParameter', 
-		        choiceType: 'PT_SINGLE_SELECT',   
-				name: 'Categories', 
-				script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]']], 
-				script: [classpath: [], sandbox: false, script:  categories])
-		choice ($class: 'CascadeChoiceParameter', 
-		        choiceType: 'PT_SINGLE_SELECT',
-				name: 'Items', referencedParameters: 'Categories', 
-				script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]']], 
-				script: [classpath: [], sandbox: false, script: items])	       	   
+		activeChoiceParam('Service') {
+            description('Select service you wan to deploy')
+            choiceType('SINGLE_SELECT')
+            groovyScript {
+                script('return ['web-service', 'proxy-service', 'backend-service']')
+                fallbackScript('"fallback choice"')
+            }
     }
+	}
 	stages {
 		stage('Checkout & Environment Prep'){
 			steps {
