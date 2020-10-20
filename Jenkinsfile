@@ -34,13 +34,11 @@ String populateItems(List default_item, List vegetablesList, List fruitsList){
 
 
 
-properties([
+/* properties([
     parameters([
-        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false,
-        script:  categories]]],[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Items', referencedParameters: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: items]]]
-    ])
+         ])
 ])
-
+ */
 pipeline {
   agent any
 
@@ -72,6 +70,9 @@ pipeline {
 		string (name: 'PROFILE',
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
+		[$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT',   name: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  categories]]],
+		[$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'Items', referencedParameters: 'Categories', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: items]]]
+
     	   
     }
 	stages {
