@@ -55,8 +55,6 @@ pipeline {
 }
 
 
-
-])
 	stages {
 		stage('Checkout & Environment Prep'){
 			steps {
