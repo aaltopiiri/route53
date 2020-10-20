@@ -1,4 +1,4 @@
-terraform {
+/* terraform {
   backend "s3" {
     bucket         = "aaltopiiri-terraform-bucket"
     key            = "terraform.tfstate"
@@ -7,7 +7,7 @@ terraform {
     dynamodb_table = "aws-locks"
     encrypt        = true
   }
-}
+} */
 
 resource "aws_route53_health_check" "health_check_us" {
   fqdn              = "example.com"
