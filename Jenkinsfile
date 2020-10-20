@@ -43,6 +43,7 @@ pipeline {
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
 		activeChoiceParam('Service') {
+			$class: 'ChoiceParameter',
             description('Select service you wan to deploy')
             choiceType('SINGLE_SELECT')
             groovyScript {
