@@ -47,8 +47,8 @@ pipeline {
             filterable()
             choiceType('SINGLE_SELECT')
             groovyScript {
-                script('["Sao Paulo", "Rio de Janeiro", "Parana:selected", "Acre"]')
-                fallbackScript('return ["ERROR"]')
+                script('''["Sao Paulo", "Rio de Janeiro", "Parana:selected", "Acre"]''')
+                fallbackScript('''return ["ERROR"]''')
             }
         }
 
