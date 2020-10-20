@@ -93,13 +93,13 @@ resource "aws_route53_record" "a-latency-us-east-1" {
 }
 
 
-  module "acm_request_certificate" {
+/*   module "acm_request_certificate" {
   source                            = "git::https://github.com/cloudposse/terraform-aws-acm-request-certificate.git?ref=tags/0.7.0"
   domain_name                       = "${data.aws_route53_zone.default.name}"
   process_domain_validation_options = true
   ttl                               = "300"
   subject_alternative_names         = ["*.${data.aws_route53_zone.default.name}"]
-}  
+}   */
 
 resource "aws_route53_record" "aaaa-latency-us-east-1" {
   zone_id        = aws_route53_zone.primary.zone_id
