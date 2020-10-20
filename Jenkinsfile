@@ -79,8 +79,7 @@ pipeline {
 		        choiceType: 'PT_SINGLE_SELECT',
 				name: 'Items', referencedParameters: 'Categories', 
 				script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]']], 
-				script: [classpath: [], sandbox: false, script: items])
-)	       	   
+				script: [classpath: [], sandbox: false, script: items])	       	   
     }
 	stages {
 		stage('Checkout & Environment Prep'){
