@@ -1,0 +1,50 @@
+  resource "aws_route53_record" "A-record-ap-south-1" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "${data.aws_route53_zone.default.name}"
+  type    = "A"
+  ttl     = "300"
+  //set_identifier = "ap-south-1.${var.domain_name}"
+  records = ["10.10.10.10"]
+  //records = ["ap-south-1.${data.aws_route53_zone.default.name}."]
+/*   latency_routing_policy {
+    region = "ap-south-1"
+  }
+  alias {
+  name                   = "ap-south-1.${var.domain_name}."
+  zone_id                = 
+  evaluate_target_health = false
+  } */
+}
+
+/*
+resource "aws_route53_record" "AAAA-record-ap-south-1" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "${data.aws_route53_zone.default.name}"
+  type    = "AAAA"
+  //ttl     = "300"
+  set_identifier = "ap-south-1.${data.aws_route53_zone.default.name}"
+  latency_routing_policy {
+  region = "ap-south-1"
+  }
+  alias {
+    name                   = "ap-south-1.${data.aws_route53_zone.default.name}."
+    zone_id                = data.aws_route53_zone.default.zone_id
+    evaluate_target_health = false
+  }
+}
+
+ */
+
+resource "aws_route53_record" "mail1-record" {
+  zone_id = data.aws_route53_zone.default.zone_id
+  name    = "${data.aws_route53_zone.default.name}"
+  type    = "MX"
+  ttl     = "300"
+  records = [
+    "1 aspmx.l.google.com.",
+    "5 alt1.aspmx.l.google.com.",
+    "5 alt2.aspmx.l.google.com.",
+    "10 aspmx2.googlemail.com.",
+    "10 aspmx3.googlemail.com."
+  ]
+}
