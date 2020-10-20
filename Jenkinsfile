@@ -42,14 +42,16 @@ pipeline {
 		string (name: 'PROFILE',
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
-		activeChoiceParam('Service') {
-			description('Select service you wan to deploy')
+		activeChoiceParam('States') {
+            description('Select a state option')
+            filterable()
             choiceType('SINGLE_SELECT')
             groovyScript {
-                script('return ['web-service', 'proxy-service', 'backend-service']')
-                fallbackScript('"fallback choice"')
+                script('["Sao Paulo", "Rio de Janeiro", "Parana:selected", "Acre"]')
+                fallbackScript('return ["ERROR"]')
             }
-    }
+        }
+
 }
 
 
