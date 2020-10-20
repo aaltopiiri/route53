@@ -7,8 +7,9 @@ List default_item = ["\"Not Applicable\""],
 String categories = buildScript(category_list),
 String vegetables = buildScript(vegetables_list),
 String fruits = buildScript(fruits_list),
-String items = populateItems(default_item,vegetables_list,fruits_list),
-String buildScript(List values){
+String items = populateItems(default_item,vegetables_list,fruits_list)
+
+/* String buildScript(List values){
   return "return $values"
 },
 String populateItems(List default_item, List vegetablesList, List fruitsList){
@@ -21,7 +22,8 @@ String populateItems(List default_item, List vegetablesList, List fruitsList){
      return $default_item
      }
      """
-})
+} */
+)
 {
 	ACCESS = "export AWS_PROFILE=${PROFILE} && export TF_ENV_profile=${PROFILE}"
 	sh ("cd $WORKSPACE && ${ACCESS} && terraform init") // main
