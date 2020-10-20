@@ -43,7 +43,7 @@ pipeline {
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
 		activeChoiceParam('Service') {
-			$class: 'ChoiceParameter',
+			
             description('Select service you wan to deploy')
             choiceType('SINGLE_SELECT')
             groovyScript {
@@ -87,7 +87,7 @@ pipeline {
 			steps {
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
 
 								try {
 									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -detailed-exitcode -out=tfplan')
@@ -115,7 +115,7 @@ pipeline {
 			steps {
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
 
 								try {
 									tfCmd('apply', '-lock=false tfplan')
@@ -150,7 +150,7 @@ pipeline {
 				}
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
 								try {
 									tfCmd('destroy', '-var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -auto-approve')
 								} catch (ex) {
