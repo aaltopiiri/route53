@@ -42,16 +42,6 @@ pipeline {
 		string (name: 'PROFILE',
 			   defaultValue: 'terraform',
 			   description: 'Optional. Target aws profile defaults to terraform')
-		activeChoiceParam('States') {
-            description('Select a state option')
-            filterable()
-            choiceType('SINGLE_SELECT')
-            groovyScript {
-                script('''["Sao Paulo", "Rio de Janeiro", "Parana:selected", "Acre"]''')
-                fallbackScript('''return ["ERROR"]''')
-            }
-        }
-
 }
 
 
@@ -90,7 +80,7 @@ pipeline {
 			steps {
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 
 								try {
 									tfCmd('plan', '-var profile="${PROFILE}" -var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -detailed-exitcode -out=tfplan')
@@ -118,7 +108,7 @@ pipeline {
 			steps {
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 
 								try {
 									tfCmd('apply', '-lock=false tfplan')
@@ -153,7 +143,7 @@ pipeline {
 				}
 				dir("${PROJECT_DIR}") {
 					script {
-						wrap([$class: 'AnsiColorBuildWrapper', $class: 'ChoiceParameter', colorMapName: 'xterm']) {
+						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
 								try {
 									tfCmd('destroy', '-var region="us-west-2" -var domain_name="${DOMAIN_NAME}" -lock=false -auto-approve')
 								} catch (ex) {
