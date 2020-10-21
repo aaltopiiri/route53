@@ -46,14 +46,39 @@ pipeline {
 
 
 	stages {
-    stage('Parameters'){
-		when { anyOf
-					{
-						environment name: 'ACTION', value: 'plan';
+
+		stage('Checkout & Environment Prep'){
+			steps {
+				script {
+					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {8
+							try {
+								echo "Setting up Terraform"
+								def tfHome = tool name: 'terraform-0.13.1',
+									type: 'org.jenkinsci.plugins.terraform.TerraformInstallation'
+									env.PATH = "${tfHome}:${env.PATH}"
+									currentBuild.displayName += "[$AWS_REGION]::[$ACTION]"
+									sh("""
+										export AWS_PROFILE=${PROFILE}
+										export TF_ENV_profile=${PROFILE}
+										mkdir -p /tmp/jenkins/.terraform.d/plugins/macos
+									""")
+									tfCmd('version')
+							} catch (ex) {
+                                                                echo 'Err: Incremental Build failed with Error: ' + ex.toString()
+								currentBuild.result = "UNSTABLE"
+							}
 					}
 				}
-                steps {
-                    script {
+			}
+		}		
+		stage('terraform plan') {
+			when { anyOf
+					{
+						environment name: 'ACTION', value: 'plan';
+						environment name: 'ACTION', value: 'apply'
+					}
+				}
+			steps {
                     properties([
                             parameters([
                                 [$class: 'ChoiceParameter', 
@@ -132,42 +157,8 @@ pipeline {
                                 ]
                             ])
                         ])
-                    }
-                }
-            }
 
-		stage('Checkout & Environment Prep'){
-			steps {
-				script {
-					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm'])  {8
-							try {
-								echo "Setting up Terraform"
-								def tfHome = tool name: 'terraform-0.13.1',
-									type: 'org.jenkinsci.plugins.terraform.TerraformInstallation'
-									env.PATH = "${tfHome}:${env.PATH}"
-									currentBuild.displayName += "[$AWS_REGION]::[$ACTION]"
-									sh("""
-										export AWS_PROFILE=${PROFILE}
-										export TF_ENV_profile=${PROFILE}
-										mkdir -p /tmp/jenkins/.terraform.d/plugins/macos
-									""")
-									tfCmd('version')
-							} catch (ex) {
-                                                                echo 'Err: Incremental Build failed with Error: ' + ex.toString()
-								currentBuild.result = "UNSTABLE"
-							}
-					}
-				}
-			}
-		}		
-		stage('terraform plan') {
-			when { anyOf
-					{
-						environment name: 'ACTION', value: 'plan';
-						environment name: 'ACTION', value: 'apply'
-					}
-				}
-			steps {
+
 				dir("${PROJECT_DIR}") {
 					script {
 						wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
