@@ -47,6 +47,11 @@ pipeline {
 
 	stages {
     stage('Parameters'){
+		when { anyOf
+					{
+						environment name: 'ACTION', value: 'plan';
+					}
+				}
                 steps {
                     script {
                     properties([
