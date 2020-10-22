@@ -1,0 +1,15 @@
+setting {
+    records      = "10.10.10.10"
+    type = "A"
+    name     = "www"
+  }
+setting {
+    records      = "2z/Uk/zjEGfOFijjVHpd9z1CoqwlMqgKZfD64V75P0k="
+    type = "TXT"
+    name     = "txt1"
+  }
+setting {
+    records      = "ghs.google.com"
+    type = "CNAME"
+    name     = "cname1"
+  }
